@@ -1,6 +1,5 @@
-import logo from './logo.svg';
 import './App.css';
-import { useState } from 'react';
+import React, { useState } from 'react';
 
 async function readFile(){
 
@@ -10,74 +9,137 @@ async function readFile(){
 
   var table = [];
 
-  const dataTable = data.split('\n').slice();  
+  const dataTable = data.split('\n').slice(); //Separates each new line
   dataTable.forEach(elem => {
-    const col = elem.split(',');
-    let id = col[0];
-    let contactID = col[1];
-    let street = col[2];
-    let city = col[3];
-    let state = col[4];
-    let country = col[5];
-    let zip = col[6];
-    let lat = col[7];
-    let lng = col[8];
-    let createdAt = col[8];
-    let updatedAt = col[9];
+    const col = elem.split(','); //Separates based on comma delimiter
+    table.push(col);
+  });
 
-    let total = [id, contactID, street, city, state, country, zip, lat, lng, createdAt, updatedAt];
-    table.push(total);
+  table.shift(); //Removes the initial template lines
+  table = table.map(record => {
+    return record.filter(columns => {
+      //if(columns == "") { return false; } //Removes blank spaces
+      if(columns) { return true; } //All truthy values
+      return false; 
+    });
   });
 
   return table;
 }
 
 let table = [];
-readFile().then(elem => { table = Array.from(elem)});
+readFile().then(elem => { 
+  table = Array.from(elem); 
 
+  //Checks if all entries are equal in length
+  let equal = false;
+  table.forEach(elem => {
+    if(elem.length == 11) { equal = true; }
+  });
+
+  if(equal) { console.log('All entries are equal in length.'); }
+  else { console.log('Not all entries equal in length'); }
+});
 
 function App() {
+  const [filterValue, setFilterValue] = useState('');
+  const [filterType, setFilterType] = useState('City');
+  const [displayTable, setDisplayTable] = useState(table);
 
-  //Set state of table
-  const [displayTable, setDisplayTable] = useState(Array.from(table));
+  const [totalAddresses, setTotalAddresses] = useState(-1);
 
-  //Sort the column
-  function sort(column){
+  function filter(){
 
-    let copy = Array.from(table);
-    copy[0] = copy[column]; //Swaps value to the front 
-    copy.sort(function(a,b){ //Sorts based on first value.
-      return b[1] - a[1];
+    //Verify data before filtering
+    console.log('Total Entries: ', displayTable.length);
+    console.log('Filtered Value: ', filterValue, ' Type:', filterType);
+
+    let filtered = displayTable.filter( row => {
+
+        switch(filterType){
+          case 'City': {
+            if(!row[3]){
+              return false;
+            } 
+            return (row[3].toLowerCase() === filterValue.toLowerCase())
+          }
+          case 'State': {
+            if(row[4]){
+              return (row[4].toLowerCase() === filterValue.toLowerCase());
+            } 
+            return false;            
+          }
+          case 'Country': {
+            if(row[5]){
+              return (row[5].toLowerCase() === filterValue.toLowerCase());
+            } 
+            return false;            
+          }
+          case 'ZIP': {
+            if(row[6]){
+              return (row[6].toLowerCase() === filterValue.toLowerCase());
+            } 
+            return false;            
+          }
+        }
+
+        return false; //Match not found
     });
 
-    setDisplayTable(copy);
-    console.log(copy[0]);
-  };
+    filtered = filtered.filter(elem => elem.length > 0); //Removes empty arrays
+    return filtered.length;
+  }
 
+  function handleSubmit(event){
+
+    //Has the displayTable copied the data from the Promise?
+    if(displayTable.length == 0) { 
+      setDisplayTable(table); 
+      console.log('Data still loading...');
+    } else {
+      let total = filter();
+      console.log('Filtered Length:', total);
+      setTotalAddresses(total);
+    }
+
+    event.preventDefault();
+  }
 
   return (
     <div className="App">
-      <header className="App-header">
+      <div className="App-header">
+      <h2></h2>
+        <form onSubmit={handleSubmit}>
+          <label>Filter Value: </label>
+          <input 
+            type="text" 
+            required 
+            value={filterValue}
+            onChange={(e) => setFilterValue(e.target.value)}
+          />
+          <label> Filter: </label>
+          <select
+            value={filterType}
+            onChange={(e) => setFilterType(e.target.value)}
+          >
+            <option value="City">City</option>
+            <option value="State">State</option>
+            <option value="Country">Country</option>
+            <option value="ZIP">ZIP Code</option>
+            
+          </select>
+          <br/>
+          <button>Filter</button>
 
-      <button onClick={() => {sort(0)}}>ID</button>
-      <button onClick={() => {sort(1)}}>ContactID</button>
-      <button onClick={() => {sort(2)}}>Street</button>
-      <button onClick={() => {sort(3)}}>City</button>
-      <button onClick={() => {sort(4)}}>State</button>
-      <button onClick={() => {sort(5)}}>Country</button>
-      <button onClick={() => {sort(6)}}>ZIP</button>
-      <button onClick={() => {sort(7)}}>Latitude</button>
-      <button onClick={() => {sort(8)}}>Longitude</button>
-      <button onClick={() => {sort(9)}}>CreatedAt</button>
-      <button onClick={() => {sort(10)}}>UpdatedAt</button>
+          <br/><br/>
 
-      {`  Size: ${displayTable.length}`}
-      {displayTable.map(elem => {
-        <h1>{elem[0]}</h1>
-      })}
+          {(totalAddresses != -1) ? 
+              <h3>Total Found Addresses: {totalAddresses}</h3> : ''}
+        </form>
+        
 
+      </div>
 
-      </header>
     </div>
   );
 }

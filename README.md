@@ -31,7 +31,7 @@ Design a simple solution to the situation described above using any programming 
 
 Please send a tar.gz or zip file containing your code, dependencies and your README to us via email.
 
-##Solution Notes
+## Solution Notes
 
 The following are the main steps used to solve this challenge.
 

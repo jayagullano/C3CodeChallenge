@@ -1,3 +1,4 @@
+import logo from './logo.svg';
 import './App.css';
 import React, { useState } from 'react';
 
@@ -11,14 +12,20 @@ async function readFile(){
 
   const dataTable = data.split('\n').slice(); //Separates each new line
   dataTable.forEach(elem => {
-    const col = elem.split(','); //Separates based on comma delimiter
+
+    let col = elem.split(','); //Separates based on comma delimiter
+
+    //remove special characters and whitespace
+    col = col.map(elem => elem.trim());
+
     table.push(col);
   });
 
-  table.shift(); //Removes the initial template lines
+  table.shift(); //Removes the initial template line
+
+  //Removes empty subarrays
   table = table.map(record => {
     return record.filter(columns => {
-      //if(columns == "") { return false; } //Removes blank spaces
       if(columns) { return true; } //All truthy values
       return false; 
     });
@@ -87,7 +94,12 @@ function App() {
     });
 
     filtered = filtered.filter(elem => elem.length > 0); //Removes empty arrays
-    return filtered.length;
+
+    //Stringify each element and create new set to remove EXACT duplicates
+    let finalTotal = new Set(
+        filtered.map(elem => JSON.stringify(elem).toLowerCase())
+      ).size;
+    return finalTotal;
   }
 
   function handleSubmit(event){

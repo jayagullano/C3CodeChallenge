@@ -30,3 +30,40 @@ The output should be a simple report of the calculated data.
 Design a simple solution to the situation described above using any programming language you wish. The input will be a CSV file. The output can be either JSON or a simple HTML file. Your submission should include your source code, and a README for your solution. In your README please describe your object model, information about the software design choices you made. Please also include a paragraph on how you would extend your solution to make it better if given more time.
 
 Please send a tar.gz or zip file containing your code, dependencies and your README to us via email.
+
+## Solution Notes
+
+The following are the main steps used to solve this challenge.
+
+- Access the information file
+	- Using a fetch API to load all the data, then parse this to a string to make it maniputable.
+
+- Parse information received.
+	- data.split('\n') will separate each new line into its own element, and slice() copies over this array.
+	- We now have a one-dimensional array, but each line is still a single string element.
+	- We can separate each individual line using the comma as a delimiter, using elem.split(',').
+	- We shift the table to remove the initial template line from the .csv file then return the array
+	  as a resolution value.
+
+- Create display for filtering.
+	- This requires an input, a filter type, submit button.
+	- We also include React state hooks to deal with the changing values and upon submission perform
+ 	  the calculations to filter the data.
+
+- Filter data using Algorithm.
+	- We create three functions to handle the changes in the input box and drop list and the submission of
+	  form. 
+		- We can check if this data is in fact being by displaying to console.
+	- The last function that is called when you submit the form invokes a filter function, this is the
+	  primary algorithm to sort the data. The data is in a multidimensional array so the algorithm will 
+	  be to iterate through the array, filtering the data based on the input value. 
+		- It needs validation against XSS
+		- Regular Expressions are possible solution.
+
+- Display Reporting.
+	- We then set a state variable for the total addresses, and if the total addresses is -1 (default),
+	  nothing is displayed, meaning possible loading.
+
+- Notes:
+	- React by default escapes special characters so XSS is secure for this program 
+	  (i.e., "<img onerror='alert(\"Hacked!\")' src='invalid-image' />"; does not work).

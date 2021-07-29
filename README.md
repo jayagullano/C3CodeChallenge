@@ -80,6 +80,6 @@ The following are the main steps used to solve this challenge.
 	  a <input type="file" name="file">... to prompt for the file, rather than having it implicitly in the same directory.
 	  
 - Reporting Functionality:
-	- The program displays the final result of how many addresses there are based on the filter arguments via a <h3> tag. As the document requested, 
+	- The program displays the final result of how many addresses there are based on the filter arguments via a h3 tag. As the document requested, 
 	  the correct solution would be to export via a JSON or an HTML file. 
 	- This feature was not done part of my solution, but could also be achieved through pagination.

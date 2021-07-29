@@ -37,7 +37,7 @@ This solution was built in React using the base libraries included from create-r
 with the technology. React by default prevents against XSS security threats, and as there is an input to query the data this protects the application. React
 also have state management for its components, therefore managing all inputs does not require the use of additional libraries. 
 
-The object model stems from the base index.js which queries the root <div> from the main page. Within React, the major component holding the solution to this challenge 
+The object model stems from the base index.js which queries the root div from the main page. Within React, the major component holding the solution to this challenge 
 is within the App.js that is imported from the index.js. Within the App.js includes one major function, readFile(), used to retrieve the data from the CSV file where
 the function component App references.
 

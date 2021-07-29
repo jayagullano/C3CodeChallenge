@@ -8,18 +8,32 @@ async function readFile(){
   const data = await res.text();
 
   var table = [];
-  let regex1 = /("[^",]+),([^",]+),([^"]+")/g; //Removes two commas
+  let regex1 = /("[^",]+),([^",]+)?,([^"]+")/g; //Removes two commas
   let regex2 = /("[^",]+),([^"]+")/g; //Removes one comma between quotations
   let regex3 = /["]/g;  //Removes any quotations marks within the string
 
   const dataTable = data.split('\n').slice(); //Separates each new line
   dataTable.forEach(elem => {
 
+    //Remove special characters
     elem = elem.replace(regex1,"$1 $2 $3");
+    elem = elem.replace(regex1,"$1 $2 $3");
+
     elem = elem.replace(regex2,"$1 $2");
     elem = elem.replace(regex3,"");
 
     let col = elem.split(','); //Separates based on comma delimiter
+
+    //Remove any empty cells
+    col = col.filter(cell => {
+      if(cell) { return true; } //All truthy values
+      return false; 
+    });
+    
+    //Finds columns that have more than 11 cells
+    if(col.length > 11) {
+      console.log(col);
+    }
 
     //remove special characters and whitespace
     col = col.map(e => e.trim());

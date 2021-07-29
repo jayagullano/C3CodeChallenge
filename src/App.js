@@ -1,4 +1,3 @@
-import logo from './logo.svg';
 import './App.css';
 import React, { useState } from 'react';
 
@@ -9,14 +8,21 @@ async function readFile(){
   const data = await res.text();
 
   var table = [];
+  let regex1 = /("[^",]+),([^",]+),([^"]+")/g; //Removes two commas
+  let regex2 = /("[^",]+),([^"]+")/g; //Removes one comma between quotations
+  let regex3 = /["]/g;  //Removes any quotations marks within the string
 
   const dataTable = data.split('\n').slice(); //Separates each new line
   dataTable.forEach(elem => {
 
+    elem = elem.replace(regex1,"$1 $2 $3");
+    elem = elem.replace(regex2,"$1 $2");
+    elem = elem.replace(regex3,"");
+
     let col = elem.split(','); //Separates based on comma delimiter
 
     //remove special characters and whitespace
-    col = col.map(elem => elem.trim());
+    col = col.map(e => e.trim());
 
     table.push(col);
   });
@@ -99,6 +105,8 @@ function App() {
     let finalTotal = new Set(
         filtered.map(elem => JSON.stringify(elem).toLowerCase())
       ).size;
+
+    console.log(filtered);
     return finalTotal;
   }
 

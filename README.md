@@ -67,3 +67,19 @@ The following are the main steps used to solve this challenge.
 - Notes:
 	- React by default escapes special characters so XSS is secure for this program 
 	  (i.e., "<img onerror='alert(\"Hacked!\")' src='invalid-image' />"; does not work).
+	  
+## Improvement Notes
+
+- Filtering:
+	- The filtering feature held within the filter() function evaluates if the filter value is equal using an equality symbol (i.e. ===). An improvement
+	  or the more correct solution would be to use Regex to filter based on /[\w ]/g to account for alphanumerics as there were instances of 
+	  data having " quotation marks (i.e., \"701 South Victory Blvd.).
+	 
+- Fetch API:
+	- The program pulls in the address.csv via a fetch API with a relative path. An improvement would be an option to open the file directory using 
+	  a <input type="file" name="file">... to prompt for the file, rather than having it implicitly in the same directory.
+	  
+- Reporting Functionality:
+	- The program displays the final result of how many addresses there are based on the filter arguments via a <h3> tag. As the document requested, 
+	  the correct solution would be to export via a JSON or an HTML file. 
+	- This feature was not done part of my solution, but could also be achieved through pagination.

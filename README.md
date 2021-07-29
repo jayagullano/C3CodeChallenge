@@ -33,24 +33,39 @@ Please send a tar.gz or zip file containing your code, dependencies and your REA
 
 ## Solution Notes
 
+This solution was built in React using the base libraries included from create-react-app. The reason this specific technology was chosen is due to the familiarity 
+with the technology. React by default prevents against XSS security threats, and as there is an input to query the data this protects the application. React
+also have state management for its components, therefore managing all inputs does not require the use of additional libraries. 
+
+The object model stems from the base index.js which queries the root <div> from the main page. Within React, the major component holding the solution to this challenge 
+is within the App.js that is imported from the index.js. Within the App.js includes one major function, readFile(), used to retrieve the data from the CSV file where
+the function component App references.
+
 The following are the main steps used to solve this challenge.
 
-- Access the information file
+- Access the information file:
+	- The purpose of this step is to retrieve the file in order to search for specific filters.
 	- Using a fetch API to load all the data, then parse this to a string to make it maniputable.
 
 - Parse information received.
+	- The purpose of this step is to convert the file into a more manageable container which our program 
+	  can manipulate according to our requirements.
 	- data.split('\n') will separate each new line into its own element, and slice() copies over this array.
 	- We now have a one-dimensional array, but each line is still a single string element.
-	- We can separate each individual line using the comma as a delimiter, using elem.split(',').
+	- We can separate each individual line using the comma as a separator, using elem.split(',').
 	- We shift the table to remove the initial template line from the .csv file then return the array
 	  as a resolution value.
 
 - Create display for filtering.
-	- This requires an input, a filter type, submit button.
+	- The purpose of this step is to have a display where the user can enter the value that we want to search from the data,
+	  be able to search by certain categories, like city, state, country, etc, and to be able to submit the form.
+	- This requires an input box, a filter type via a select dropdown list, and a submit button all held within a form.
 	- We also include React state hooks to deal with the changing values and upon submission perform
  	  the calculations to filter the data.
 
 - Filter data using Algorithm.
+	- The purpose of this step is once the user submits the form to find the total addresses, this algorithm 
+	  will be called to find the data.
 	- We create three functions to handle the changes in the input box and drop list and the submission of
 	  form. 
 		- We can check if this data is in fact being by displaying to console.
@@ -61,6 +76,8 @@ The following are the main steps used to solve this challenge.
 		- Regular Expressions are possible solution.
 
 - Display Reporting.
+	- The purpose of this step is to display the information calculated from the algorithm stated previously 
+	  in a manner that is readible to the user.
 	- We then set a state variable for the total addresses, and if the total addresses is -1 (default),
 	  nothing is displayed, meaning possible loading.
 
